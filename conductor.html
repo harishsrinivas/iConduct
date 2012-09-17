@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head><script type='text/javascript'>window.mod_pagespeed_start = Number(new Date());</script>
+<meta charset="UTF-8">
+<title>iConduct!</title>
+<link rel="stylesheet" href ="conductor.css">
+</head>
+<body>
+<section>
+<div class="main">
+<h2>Device Orientation</h2>
+	<table>
+	<tr>
+	<td>Event Supported</td>
+	<td id="doEvent"></td>
+	</tr>
+	<tr>
+	<td>Tilt Left/Right [tiltLR]</td>
+	<td id="doTiltLR"></td>
+	</tr>
+	<tr>
+	<td>Tilt Front/Back [tiltFB]</td>
+	<td id="doTiltFB"></td>
+	</tr>
+	<tr>
+	<td>Direction [direction]</td>
+	<td id="doDirection"></td>
+	</tr>
+	<tr>
+	<td>Acceleration</td>
+	<td id="accel"></td>
+	</tr>
+	<tr>
+	<td>Sound Volume</td>
+	<td id="sound"></td>
+	</tr>
+
+	<tr>
+		<td>
+			Drum
+			<audio id="player2" src="01_Drum.mp3" autoplay="autoplay"></audio>
+			<button id="btnPlay2" onclick="document.getElementById('player2').play()">Play</button>
+			<button id="btnPause2" onclick="document.getElementById('player2').pause()">Pause</button>
+			<button id="btnVolU2" onclick="document.getElementById('player2').volume += 0.1">Vol+ </button>
+			<button id="btnVolD2" onclick="document.getElementById('player2').volume -= 0.1">Vol- </button>
+		</td>
+	</tr>
+	<tr>
+		<td id="soundID2"></td>
+	</tr>
+
+	<tr>
+		<td>
+			Violin
+			<audio id="player3" src="03_Violin.mp3" autoplay="autoplay"></audio>
+			<button id="btnPlay3" onclick="document.getElementById('player3').play()">Play</button>
+			<button id="btnPause3" onclick="document.getElementById('player3').pause()">Pause</button>
+			<button id="btnVolU3" onclick="document.getElementById('player3').volume += 0.1">Vol+ </button>
+			<button id="btnVolD3" onclick="document.getElementById('player3').volume -= 0.1">Vol- </button>
+		</td>
+	</tr>
+	<tr>
+		<td id="soundID3"></td>
+	</tr>
+
+	<tr>
+		<td>
+			Guitar
+			<audio id="player4" src="04_Guitar.mp3" autoplay="autoplay"></audio>
+			<button id="btnPlay4" onclick="document.getElementById('player4').play()">Play</button>
+			<button id="btnPause4" onclick="document.getElementById('player4').pause()">Pause</button>
+			<button id="btnVolU4" onclick="document.getElementById('player4').volume += 0.1">Vol+ </button>
+			<button id="btnVolD4" onclick="document.getElementById('player4').volume -= 0.1">Vol- </button>
+		</td>
+	</tr>
+	<tr>
+		<td id="soundID4"></td>
+	</tr>
+	</table>
+
+
+</div>
+</section>
+
+<p>
+
+
+
+<div class="container" style="-webkit-perspective: 300; perspective: 300;">
+</div>
+<script src="/sound/js/riffwave.js"></script>
+<script type="text/javascript">
+//Code is adapted from http://www.html5rocks.com/en/tutorials/device/orientation/
+	init3();
+	var count=0;
+
+	function init() {
+		if(window.DeviceOrientationEvent){
+			console.log("DeviceOrientation is supported on this device");
+			}else if(window.OrientationEvent){
+			console.log("DeviceOrientation is supported on this device via MozOrientation");
+			}
+			
+
+	}
+	
+	
+	function init2(){
+		if(window.DeviceOrientationEvent){
+		// Listen for the deviceorientation event and handle DeviceOrientationEvent object
+			window.addEventListener('deviceorientation',devOrientHandler,false);
+		}else if(window.OrientationEvent){
+		// Listen for the MozOrientation event and handle OrientationData object
+		window.addEventListener('MozOrientation',mozDevOrientHandler,false);
+			}
+	}
+
+	function init3(){
+		if(window.DeviceOrientationEvent){
+			document.getElementById("doEvent").innerHTML="DeviceOrientation";
+			// Listen for the deviceorientation event and handle the raw data
+			window.addEventListener('deviceorientation',
+			function(eventData){
+				var tiltLR=eventData.gamma;
+				var tiltFB=eventData.beta;
+				var dir=eventData.alpha;
+				var motUD=null;
+				var accel = Math.abs(eventData.gamma) + Math.abs(eventData.beta) + Math.abs(eventData.alpha);
+				deviceOrientationHandler(tiltLR,tiltFB,dir,accel,motUD);},false);
+		}else {
+			alert("Not supported on your device or browser. Sorry.");
+		}
+		
+	}
+
+
+ 
+	function deviceOrientationHandler(tiltLR,tiltFB,dir,accel,motionUD){
+	
+		//Starts playing all the tracks at once
+		//document.getElementById("player2").play();
+		//document.getElementById("player3").play();
+		//document.getElementById("player4").play();
+
+		document.getElementById("doTiltLR").innerHTML=Math.round(tiltLR);
+		document.getElementById("doTiltFB").innerHTML=Math.round(tiltFB);
+		document.getElementById("doDirection").innerHTML=Math.round(dir);
+		document.getElementById("accel").innerHTML=Math.round(accel);		
+
+		document.getElementById("soundID2").innerHTML = "No Change";
+		document.getElementById("soundID3").innerHTML = "No Change";
+		document.getElementById("soundID4").innerHTML = "No Change";
+
+		//Increases the volume of all tracks
+		if((tiltLR>-30 && tiltLR<30) &&tiltFB>20){
+			document.getElementById("btnVolU2").click();
+			document.getElementById("soundID2").innerHTML = "Increase Sound";
+			document.getElementById("btnVolU3").click();
+			document.getElementById("soundID3").innerHTML = "Increase Sound";
+			document.getElementById("btnVolU4").click();
+			document.getElementById("soundID4").innerHTML = "Increase Sound";
+		}
+		
+		//Decreases the volume of all tracks
+		if((tiltLR>-30 && tiltLR<30) && tiltFB<-20){
+			document.getElementById("btnVolD2").click();
+			document.getElementById("soundID2").innerHTML = "Decrease Sound";
+			document.getElementById("btnVolD3").click();
+			document.getElementById("soundID3").innerHTML = "Decrease Sound";
+			document.getElementById("btnVolD4").click();
+			document.getElementById("soundID4").innerHTML = "Decrease Sound";
+		}
+		
+		//Increases volume of Drum
+		if((tiltLR>30 && tiltLR<80) && (tiltFB>50 || tiltFB<-50)){
+			document.getElementById("btnVolU2").click();
+			document.getElementById("soundID2").innerHTML="Increase";
+			} else {
+		}		
+
+		//Decreases volume of Drum
+		if((tiltLR>30 && tiltLR<80) &&(tiltFB<30 && tiltFB>-30)){
+			document.getElementById("btnVolD2").click();
+			document.getElementById("soundID2").innerHTML="Decrease";
+			} else {
+		}		
+
+		//Increases volume of Violin
+		if((tiltLR>-80 && tiltLR<-30) && (tiltFB>50 || tiltFB<-50)){
+			document.getElementById("btnVolU3").click();
+			document.getElementById("soundID3").innerHTML="Increase";
+			} else {
+		}		
+
+		//Decreases volume of Violin
+		if((tiltLR>-80 && tiltLR<-30) && (tiltFB<30 && tiltFB>-30)){
+			document.getElementById("btnVolD3").click();
+			document.getElementById("soundID3").innerHTML="Decrease";
+			} else {
+		}		
+
+		//Increases volume of Guitar
+		if((tiltLR>150 && tiltLR<200) && (tiltFB>50 || tiltFB<-50)){
+			document.getElementById("btnVolU4").click();
+			document.getElementById("soundID4").innerHTML="Increase";
+			} else {
+		}		
+
+		//Decreases volume of Guitar
+		if((tiltLR>150 && tiltLR<200) &&  (tiltFB<30 && tiltFB>-30)){
+			document.getElementById("btnVolD4").click();
+			document.getElementById("soundID4").innerHTML="Decrease";
+			} else {
+		}						
+	}
+	
+	
+</script>
+
+</body>
+</html>

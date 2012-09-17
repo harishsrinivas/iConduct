@@ -1,0 +1,24 @@
+*{
+	margin:0px;
+	padding:0px;
+}
+h2{
+	font: bold 24px Arial;
+}
+header,section,footer,nav,aside,hgroup, article {
+	display:block;
+}
+body{
+	width:100%;/*specify for flexible box style*/
+	display:-webkit-box;/*body can have flexible boxes*/
+	-webkit-box-pack:center;/*center the website*/
+	background: CornflowerBlue ;
+	color: white;
+}
+#main{
+	max-width: 1000px;
+	margin: 20px 0px;
+	display:-webkit-box;/*big wrapper can have flexible boxes*/
+	-webkit-box-orient: vertical; /*orientation of children inside parent box*/
+	-webkit-box-flex: 1;/*allow shrink or grow 0 is fixed 1 is flexible*/
+}
